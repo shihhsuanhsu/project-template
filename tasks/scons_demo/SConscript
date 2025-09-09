@@ -1,0 +1,29 @@
+"""
+Shih-Hsuan Hsu
+July 30, 2024
+This is a sample SConscript file that demonstrates how to run a Python builder.
+"""
+
+# import the given environment
+Import("env")
+
+# run a Python builder
+env.Python(
+    target=["output/hello_world.txt"],
+    source=["code/hello_world.py"],
+)
+
+# # to link a file from a different task:
+# env.Link(
+#     target = ['input/what_we_want'],
+#     source = ['#/different_task/output/what_we_want']
+# )
+
+# # to pass in an argument do the following:
+# env.Python(
+#     # you can pass in multiple sources and targets
+#     target = ['output/hello_world.txt'],
+#     # if a source file is from a different task, make sure to link it first
+#     source = ['code/hello_world.py'],
+#     ARGS = ['arg1', 'arg2']
+# )
