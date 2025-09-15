@@ -1,0 +1,61 @@
+"""
+Shih-Hsuan Hsu
+July 30, 2024
+This is a sample SConstruct file that automatically searches
+    for all the SConscript files.
+"""
+
+import sys
+import subprocess
+import platform
+import atexit
+from monkey_patches import override_warn
+from exit_functions import (
+    print_fail_summary,
+    print_warning_summary,
+    remove_locks,
+)
+from SCons.Script import GetOption
+from create_task_graph import create_task_graph
+
+sys.path.append("common/code")
+# allows importing IMAGE_FORMATS.IMAGE_FORMATS in SConscript files
+from plot_settings import IMAGE_FORMATS
+
+LINE_LENGTH = 80
+"""Line length used by black formatter."""
+
+# run the monkey patch to override the SCons warning function
+override_warn()
+
+# register the functions to be called at exit
+atexit.register(print_fail_summary)
+atexit.register(print_warning_summary)
+atexit.register(remove_locks)
+
+# get all the SConscript files in the tasks directory
+sconscript_files = Glob("**/SConscript")
+
+# comment below to disable black formatter
+if not GetOption("clean"):
+    # run black formatter all python files
+    print("Running black formatter on all Python and SCons files...")
+    subprocess.run(
+        ["black", f"--line-length={LINE_LENGTH}", ".", "SConstruct"]
+        + [str(file) for file in sconscript_files]
+    )
+
+# initiate an environment.
+env = init_env()
+
+# set environment variable for a machine without symlink privileges
+if platform.uname().node == "OVRW-ECON-P04":
+    env["UT_MACRO_VM"] = True
+    env["NO_COPY_WARNING"] = True
+
+# specify where the SConscript for each task is located.
+# the 'exports' parameter is used to pass the environment to the SConscript.
+SConscript(sconscript_files, exports="env")
+
+# create the task graph after all SConscript files are processed
+# create_task_graph(env)

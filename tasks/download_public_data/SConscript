@@ -1,0 +1,31 @@
+Import("env")
+
+FRED_TARGETS = []
+"""list of FRED targets for preventing parallelism"""
+
+env.Links(
+    target=[
+        "code/fred_api.py",
+    ],
+    source=[
+        "#/common/code/fred_api.py",
+    ],
+)
+
+# for data in [
+#     ("FEDFUNDS", "us_ffr"),
+#     ("UNRATE", "us_unrate"),
+#     ("USRECM", "us_nber_recession"),
+# ]:
+#     series, output_file = data
+#     FRED_TARGETS.append(
+#         env.Python(
+#             target=f"output/{output_file}.csv",
+#             source=["code/download_fred.py", "code/fred_api.py"],
+#             ARGS=[series, output_file],
+#             LOG_FILE=f"code/{output_file}.log",
+#         )
+#     )
+
+# prevent parallelism for FRED targets
+env.SideEffect(".PREVENT_PARALLEL_FRED", FRED_TARGETS)

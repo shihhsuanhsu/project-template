@@ -1,0 +1,21 @@
+"""
+Shih-Hsuan Hsu
+July 30, 2024
+This is a sample SConscript file that demonstrates how to run a Latex builder.
+"""
+
+# import the given environment
+Import("env")
+
+# link the hello_world.txt file to the input directory
+env.Link(
+    target="input/scons_demo/hello_world.txt",
+    source="#/scons_demo/output/hello_world.txt",
+)
+
+# run a PDF builder
+# NOTE: This requires `pdflatex` to be installed on the system.
+env.PDF(
+    target="output/sample.pdf",
+    source=["code/sample.tex", "input/scons_demo/hello_world.txt"],
+)
