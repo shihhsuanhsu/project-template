@@ -1,0 +1,117 @@
+\usepackage{amsmath, amsfonts, amsthm, amssymb}  % Some math symbols
+\usepackage{enumerate}
+\usepackage{bookmark}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{float}
+\usepackage{pdfpages}
+\usepackage{longtable}
+\usepackage{pdflscape}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{appendixnumberbeamer}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{bibentry}
+\usepackage{usebib}
+\usepackage{hyperref}
+\usepackage[outputdir=../output]{minted}
+\usepackage{newunicodechar}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{roboto}
+
+% beamer theme
+\usetheme{boxes}
+
+% get rid of navigation symbols
+\setbeamertemplate{navigation symbols}{}
+% get rid of bottom navigation bars
+\setbeamertemplate{footline}{% 
+    \hfill% 
+    \usebeamercolor[fg]{page number in head/foot}% 
+    \usebeamerfont{page number in head/foot}% 
+    \insertframenumber%
+    %\,/\,\inserttotalframenumber
+    \kern2em\vskip2em% 
+}
+
+% don't show frame number in title page
+\def\maketitle{
+    \begin{frame}[plain,noframenumbering]
+        \titlepage
+    \end{frame}
+    \setcounter{framenumber}{0}%
+}
+
+% define my colors
+\definecolor{themeblue}{RGB}{51, 153, 255}
+
+% change title colors
+\setbeamercolor{titlelike}{parent=structure,fg=themeblue}
+% change bulletpoint colors and style
+\setbeamertemplate{itemize item}{\color{themeblue}$\blacktriangleright$}
+\setbeamertemplate{itemize subitem}{\color{themeblue}\scriptsize$\blacksquare$}
+
+% change default font
+\usefonttheme{structurebold}
+\setbeamerfont{frametitle}{shape=\scshape}
+\setbeamerfont{title}{shape=\scshape}
+
+% add caption numbers
+\setbeamertemplate{caption}[numbered]
+% no counter in framebreaks
+\setbeamertemplate{frametitle continuation}{}
+
+% fix caption centering
+\usepackage[font=scriptsize,justification=centering]{caption}
+
+% define command for coloring text
+\newcommand{\black}[1]{\textcolor{black}{#1}}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\newcommand{\orange}[1]{\textcolor{utorange}{#1}}
+\newcommand{\teal}[1]{\textcolor{teal}{#1}}
+\newcommand{\gray}[1]{\textcolor{gray}{#1}}
+\newcommand{\white}[1]{\textcolor{white}{#1}}
+
+% spread out bullet points in itemize and enumerate
+\newcommand{\wideitem}[1][\fill]{\setlength{\itemsep}{#1}\item}
+\newcommand{\vertispace}[0]{\item[] }
+
+% so minted can read unicode characters
+\DeclareUnicodeCharacter{394}{$\Delta$}
+\DeclareUnicodeCharacter{398}{$\Theta$}
+\DeclareUnicodeCharacter{3A6}{$\Phi$}
+\DeclareUnicodeCharacter{3B1}{$\alpha$}
+\DeclareUnicodeCharacter{3B2}{$\beta$}
+\DeclareUnicodeCharacter{3B4}{$\delta$}
+\DeclareUnicodeCharacter{3B5}{$\varepsilon$}
+\DeclareUnicodeCharacter{3B7}{$\eta$}
+\DeclareUnicodeCharacter{3B8}{$\theta$}
+\DeclareUnicodeCharacter{3BB}{$\lambda$}
+\DeclareUnicodeCharacter{3BC}{$\mu$}
+\DeclareUnicodeCharacter{3C0}{$\pi$}
+\DeclareUnicodeCharacter{3C1}{$\rho$}
+\DeclareUnicodeCharacter{3C3}{$\sigma$}
+\DeclareUnicodeCharacter{3C9}{$\omega$}
+\DeclareUnicodeCharacter{3D5}{$\phi$}
+\DeclareUnicodeCharacter{3F5}{$\varepsilon$}
+
+% character for emdash
+\newunicodechar{─}{\textemdash}
+
+% set up colors for links
+\hypersetup{
+    colorlinks,
+    linkcolor={blue!75!black},
+    citecolor={blue!75!black},
+    urlcolor={cyan!75!black}
+}
+
+% set up bibliography
+\usepackage[authoryear]{natbib}
+\bibliographystyle{aea}
+
+% set up a command for questions for audiences
+\newcommand{\question}[1]{\textcolor{blue}{\textit{#1}}}
