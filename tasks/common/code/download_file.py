@@ -1,17 +1,14 @@
 """
 Shih-Hsuan Hsu
-July 15, 2025
-Download a file from a URL using wget.
+October 1, 2025
+Download a file from the given URL to the specified location.
 """
 
 import sys
-import wget
+from urllib.request import urlretrieve
 
-if len(sys.argv) < 3:
-    raise ValueError("Usage: python download_file.py <URL> <output_path>")
-
-URL = sys.argv[1]
-output_path = sys.argv[2]
+# check number of arguments
+assert len(sys.argv) == 3, "Usage: python download_file.py <URL> <target_path>"
 
 # download the file
-wget.download(URL, output_path)
+urlretrieve(sys.argv[1], sys.argv[2])

@@ -1,11 +1,15 @@
 # Project Template
 
-Version: 0.2.5
+Version: 0.2.6
 
 **NOTE:** Please do not modify this file.
 Shih-Hsuan uses this file to track the project template version.
 
 ## Update log
+
+### 0.2.6
+
+- Use `logs` dir
 
 ### 0.2.5
 

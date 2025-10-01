@@ -6,23 +6,14 @@ This file contains all the emitters that can be used
 """
 
 import os
-from actions import check_pdf_compiler_action
+from actions import check_pdf_compiler_action, create_log_file_path
 
 
 def add_log_to_target(target, source, env, ext):
     """
     This function adds the log file as a target.
     """
-    log_file = env.get("LOG_FILE", "")
-    if log_file == "":
-        # no log file given, use the source file name
-        log_file = str(source[0]).replace(f".{ext}", ".log")
-    else:
-        # use absolute path to avoid path issues
-        if not os.path.isabs(log_file):
-            log_file = os.path.join(env.Dir(".").srcnode().abspath, log_file)
-        # only modify $LOG_FILE if it was given to avoid modifying env
-        env["LOG_FILE"] = log_file
+    log_file = create_log_file_path(env, source, ext)
     return target + [log_file], source
 
 
