@@ -129,9 +129,10 @@ def download_file(self, target, source):
     target_abspath = Path(os.path.abspath(target))
     # use target name as the log file name
     log_file = self.get("LOG_FILE", None)
+    log_dir = self.get("LOG_DIR", "logs")
     if log_file is None:
         parts = target_abspath.with_suffix(".log").parts
-        log_file = Path(*[part.replace("output", "code") for part in parts])
+        log_file = Path(*[part.replace("output", log_dir) for part in parts])
 
     return self.Python(
         target=target,

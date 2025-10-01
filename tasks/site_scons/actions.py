@@ -106,9 +106,7 @@ def stata_build_action(source, env, *_, **__):
     # get stata runner location
     run_stata_path = os.path.abspath("site_scons/run_do_file.py")
     # get log file path
-    log_file_path = env.get("LOG_FILE", "")
-    if log_file_path == "":
-        log_file_path = str(source[0]).replace(".do", ".log")
+    log_file_path = create_log_file_path(env, source, "do")
     # add the path to the Stata configuration file
     os.environ["STATA_CONFIG_PATH"] = os.path.abspath(
         "common/code/stata_config.py"
@@ -137,9 +135,7 @@ def generic_build_action(source, env, program, ext, *_, **__):
     """
     # get directory and filename
     dir_name, filename = os.path.split(str(source[0]))
-    log_file_path = env.get("LOG_FILE", "")
-    if log_file_path == "":
-        log_file_path = str(source[0]).replace(f".{ext}", ".log")
+    log_file_path = create_log_file_path(env, source, ext)
     with open(log_file_path, "w", encoding="utf-8") as log_file:
         runner = subprocess.run(
             [program, filename] + env.get("ARGS", []),
@@ -202,9 +198,10 @@ def matlab_build_action(target, source, env, dynare=False):
         env_vars["ARGS"] = f"{arguments}"
     # get directory and filename
     dir_name, filename = os.path.split(str(source[0]))
-    log_file_path = env.get("LOG_FILE", "")
-    if log_file_path == "":
-        log_file_path = str(source[0]).replace(".m", ".log")
+    if dynare:
+        log_file_path = create_log_file_path(env, source, "mod")
+    else:
+        log_file_path = create_log_file_path(env, source, "m")
     # check if Dynare is used
     if dynare:
         executor = f"try, dynare {filename}, catch error, disp(getReport(error,'extended')), exit(1), end, exit(0);"
@@ -270,9 +267,7 @@ def pdf_build_action(target, source, env):
             pdf_env["ARGS"] += ["-pdf"]
         # set the log file path
         dir_name, filename = os.path.split(str(source[0]))
-        log_file_path = pdf_env.get("LOG_FILE", "")
-        if log_file_path == "":
-            log_file_path = str(source[0]).replace(".tex", ".log")
+        log_file_path = create_log_file_path(env, source, "tex")
         # compile
         with open(log_file_path, "w", encoding="utf-8") as log_file:
             runner = subprocess.run(
@@ -312,3 +307,23 @@ def no_action(target, source, env):
     Returns the status code in the environment variable `STATUS`.
     """
     return int(env.get("STATUS", 0))
+
+
+def create_log_file_path(env, source, ext):
+    """
+    This function creates a log file path based on the source file and extension.
+    """
+    log_file = env.get("LOG_FILE", "")
+    log_dir = env.get("LOG_DIR", "logs")
+    if log_file == "":
+        # no log file given, use the source file name
+        log_file = (
+            str(source[0]).replace(f".{ext}", ".log").replace("code", log_dir)
+        )
+    else:
+        # use absolute path to avoid path issues
+        if not os.path.isabs(log_file):
+            log_file = os.path.join(env.Dir(".").srcnode().abspath, log_file)
+        # only modify $LOG_FILE if it was given to avoid modifying env
+        env["LOG_FILE"] = log_file
+    return log_file
