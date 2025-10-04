@@ -115,6 +115,9 @@ def init_env():
     """
     # create an environment
     env = Environment()
+    # use MD5 for the decider
+    env.Decider("MD5")
+    # set ALWAYS_COPY to True if no symlink permission
     env["ALWAYS_COPY"] = not check_symlink_permission()
     env.Append(
         BUILDERS={

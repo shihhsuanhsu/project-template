@@ -52,6 +52,13 @@ class CannotInitProjectLockWarning(CustomWarning):
     """
 
 
+class SpaceInArgWarning(CustomWarning):
+    """
+    A warning class for SCons to warn users when an argument contains spaces.
+    This is used in the `parse_args` function.
+    """
+
+
 def warn(warning_obj, message):
     """
     Issue the warning message.
@@ -87,8 +94,16 @@ def cannot_init_project_lock_warning():
     warn(CannotInitProjectLockWarning, "Cannot initialize project lock.")
 
 
+def space_in_arg_warning(arg, parse_arg):
+    """
+    Issue a warning message when an argument contains spaces.
+    """
+    warn(SpaceInArgWarning, f"`{arg}`=> `{parse_arg}`")
+
+
 # enable the warning class
 SCons.Warnings.enableWarningClass(SymLinkWarning)
 SCons.Warnings.enableWarningClass(NoPDFCompilerWarning)
 SCons.Warnings.enableWarningClass(FileNotFoundWarning)
 SCons.Warnings.enableWarningClass(CannotInitProjectLockWarning)
+SCons.Warnings.enableWarningClass(SpaceInArgWarning)

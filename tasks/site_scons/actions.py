@@ -8,6 +8,7 @@ This file contains all the build actions that can be used
 import os
 import subprocess
 from pathlib import Path
+from helpers import create_log_file_path, parse_args
 from custom_warnings import (
     no_symlink_permission,
     no_pdf_compiler,
@@ -113,7 +114,7 @@ def stata_build_action(source, env, *_, **__):
     )
     with open(log_file_path, "w", encoding="utf-8") as log_file:
         runner = subprocess.run(
-            ["python", run_stata_path, filename] + env.get("ARGS", []),
+            ["python", run_stata_path, filename] + parse_args(env),
             cwd=dir_name,
             stdout=log_file,
             stderr=log_file,
@@ -138,7 +139,7 @@ def generic_build_action(source, env, program, ext, *_, **__):
     log_file_path = create_log_file_path(env, source, ext)
     with open(log_file_path, "w", encoding="utf-8") as log_file:
         runner = subprocess.run(
-            [program, filename] + env.get("ARGS", []),
+            [program, filename] + parse_args(env),
             cwd=dir_name,
             stdout=log_file,
             stderr=log_file,
@@ -192,7 +193,7 @@ def matlab_build_action(target, source, env, dynare=False):
     """
     # parse arguments as environmental variables,
     # because matlab scripts do not take arguments
-    arguments = env.get("ARGS", "")
+    arguments = parse_args(env)
     env_vars = {**os.environ}  # prevent modifying the original environment
     if arguments:
         env_vars["ARGS"] = f"{arguments}"
@@ -256,7 +257,7 @@ def pdf_build_action(target, source, env):
         )
         # set the arguments
         pdf_env = env.Clone()
-        pdf_env["ARGS"] = env.get("ARGS", [])
+        pdf_env["ARGS"] = parse_args(env)
         pdf_env["ARGS"] += [
             "-interaction=nonstopmode",
             "--file-line-error",
@@ -307,23 +308,3 @@ def no_action(target, source, env):
     Returns the status code in the environment variable `STATUS`.
     """
     return int(env.get("STATUS", 0))
-
-
-def create_log_file_path(env, source, ext):
-    """
-    This function creates a log file path based on the source file and extension.
-    """
-    log_file = env.get("LOG_FILE", "")
-    log_dir = env.get("LOG_DIR", "logs")
-    if log_file == "":
-        # no log file given, use the source file name
-        log_file = (
-            str(source[0]).replace(f".{ext}", ".log").replace("code", log_dir)
-        )
-    else:
-        # use absolute path to avoid path issues
-        if not os.path.isabs(log_file):
-            log_file = os.path.join(env.Dir(".").srcnode().abspath, log_file)
-        # only modify $LOG_FILE if it was given to avoid modifying env
-        env["LOG_FILE"] = log_file
-    return log_file
