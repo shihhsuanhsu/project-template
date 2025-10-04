@@ -1,11 +1,16 @@
 # Project Template
 
-Version: 0.2.6
+Version: 0.2.7
 
 **NOTE:** Please do not modify this file.
 Shih-Hsuan uses this file to track the project template version.
 
 ## Update log
+
+### 0.2.7
+
+- Use MD5 decider
+- Improve handling for argument (escape spaces and allow for a non-list argument)
 
 ### 0.2.6
 

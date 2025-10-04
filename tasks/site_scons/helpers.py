@@ -5,6 +5,7 @@ Helper functions for SCons environment.
 """
 
 import os
+from custom_warnings import space_in_arg_warning
 
 
 def convert_scons_path(env, path_str):
@@ -26,3 +27,48 @@ def convert_scons_path(env, path_str):
         else:
             return project_root
     return path_str
+
+
+def create_log_file_path(env, source, ext):
+    """
+    This function creates a log file path based on the source file and extension.
+    """
+    log_file = env.get("LOG_FILE", "")
+    log_dir = env.get("LOG_DIR", "logs")
+    if log_file == "":
+        # no log file given, use the source file name
+        log_file = (
+            str(source[0]).replace(f".{ext}", ".log").replace("code", log_dir)
+        )
+    else:
+        # use absolute path to avoid path issues
+        if not os.path.isabs(log_file):
+            log_file = os.path.join(env.Dir(".").srcnode().abspath, log_file)
+        # only modify $LOG_FILE if it was given to avoid modifying env
+        env["LOG_FILE"] = log_file
+    return log_file
+
+
+def parse_args(env):
+    """
+    This function is used to parse the command line arguments.
+    It sets the `ARGS` variable in the environment.
+    """
+    # retrieve the arguments from the environment
+    args = env.get("ARGS", [])
+    # if args is not a list, convert it to a list
+    if not isinstance(args, list):
+        args = [args]
+    # loop through each argument and escape spaces
+    parsed_args = []
+    for arg in args:
+        if not isinstance(arg, str):
+            # convert non-string arguments to string
+            arg = str(arg)
+        if " " in arg:
+            # raise warning for spaces in arguments
+            space_in_arg_warning(arg, f'"{arg}"')
+            parsed_args.append(f'"{arg}"')
+        else:
+            parsed_args.append(arg)
+    return parsed_args
