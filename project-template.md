@@ -1,11 +1,16 @@
 # Project Template
 
-Version: 0.2.7
+Version: 0.2.8
 
 **NOTE:** Please do not modify this file.
 Shih-Hsuan uses this file to track the project template version.
 
 ## Update log
+
+### 0.2.8
+
+- Remove unused functions
+- Update packages in the conda environment file
 
 ### 0.2.7
 

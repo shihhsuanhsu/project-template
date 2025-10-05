@@ -114,7 +114,7 @@ def stata_build_action(source, env, *_, **__):
     )
     with open(log_file_path, "w", encoding="utf-8") as log_file:
         runner = subprocess.run(
-            ["python", run_stata_path, filename] + parse_args(env),
+            ["python", run_stata_path, filename] + parse_args(env, True),
             cwd=dir_name,
             stdout=log_file,
             stderr=log_file,

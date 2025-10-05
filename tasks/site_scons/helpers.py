@@ -49,7 +49,7 @@ def create_log_file_path(env, source, ext):
     return log_file
 
 
-def parse_args(env):
+def parse_args(env, wrap_in_quotes=False):
     """
     This function is used to parse the command line arguments.
     It sets the `ARGS` variable in the environment.
@@ -65,10 +65,8 @@ def parse_args(env):
         if not isinstance(arg, str):
             # convert non-string arguments to string
             arg = str(arg)
-        if " " in arg:
-            # raise warning for spaces in arguments
-            space_in_arg_warning(arg, f'"{arg}"')
-            parsed_args.append(f'"{arg}"')
-        else:
-            parsed_args.append(arg)
+        if " " in arg and wrap_in_quotes:
+            space_in_arg_warning(arg, parse_arg=True)
+            arg = f'"{arg}"'
+        parsed_args.append(arg)
     return parsed_args

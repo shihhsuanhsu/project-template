@@ -45,13 +45,6 @@ class FileNotFoundWarning(CustomWarning):
     """
 
 
-class CannotInitProjectLockWarning(CustomWarning):
-    """
-    A warning class for SCons to warn users when the project lock cannot be initialized.
-    This is used in the `ProjectLock` class.
-    """
-
-
 class SpaceInArgWarning(CustomWarning):
     """
     A warning class for SCons to warn users when an argument contains spaces.
@@ -87,13 +80,6 @@ def file_not_found_warning(file_path):
     warn(FileNotFoundWarning, f"File was not created: {file_path}")
 
 
-def cannot_init_project_lock_warning():
-    """
-    Issue a warning message when the project lock cannot be initialized.
-    """
-    warn(CannotInitProjectLockWarning, "Cannot initialize project lock.")
-
-
 def space_in_arg_warning(arg, parse_arg):
     """
     Issue a warning message when an argument contains spaces.
@@ -105,5 +91,4 @@ def space_in_arg_warning(arg, parse_arg):
 SCons.Warnings.enableWarningClass(SymLinkWarning)
 SCons.Warnings.enableWarningClass(NoPDFCompilerWarning)
 SCons.Warnings.enableWarningClass(FileNotFoundWarning)
-SCons.Warnings.enableWarningClass(CannotInitProjectLockWarning)
 SCons.Warnings.enableWarningClass(SpaceInArgWarning)
