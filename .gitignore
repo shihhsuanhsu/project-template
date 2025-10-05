@@ -30,4 +30,3 @@ tasks/common/code/stata_config.py
 **.sconsign.dblite
 **/+*
 **/.SConscript
-.project_write.lock

@@ -5,7 +5,6 @@ All the functions that can be registered to be called at exit go here.
 """
 
 import sys
-from pathlib import Path
 import re
 from SCons.Script import GetBuildFailures
 from monkey_patches import WARNINGS
@@ -76,13 +75,3 @@ def print_warning_summary():
                 )
         else:
             print(f"\t{YELLOW}scons: Unknown warning{RESET}", file=sys.stderr)
-
-
-def remove_locks():
-    """
-    Remove the project lock file if it exists.
-    This is useful for cleaning up after a build.
-    """
-    lock_file = Path(".project_write.lock")
-    if lock_file.exists():
-        lock_file.unlink()

@@ -63,11 +63,6 @@ def link_emitter(target, source, *_, **__):
         raise ValueError(
             "The number of target files must be the same as the number of source files."
         )
-    # check if the type matches
-    if os.path.isfile(str(source[0]) and not os.path.isfile(str(target[0]))):
-        raise ValueError(
-            "The target file must be a file if the source file is a file."
-        )
     return target, source
 
 

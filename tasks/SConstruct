@@ -10,11 +10,7 @@ import subprocess
 import platform
 import atexit
 from monkey_patches import override_warn
-from exit_functions import (
-    print_fail_summary,
-    print_warning_summary,
-    remove_locks,
-)
+from exit_functions import print_fail_summary, print_warning_summary
 from SCons.Script import GetOption
 from create_task_graph import create_task_graph
 
@@ -31,7 +27,6 @@ override_warn()
 # register the functions to be called at exit
 atexit.register(print_fail_summary)
 atexit.register(print_warning_summary)
-atexit.register(remove_locks)
 
 # get all the SConscript files in the tasks directory
 sconscript_files = Glob("**/SConscript")
