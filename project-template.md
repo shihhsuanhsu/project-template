@@ -1,11 +1,15 @@
 # Project Template
 
-Version: 0.2.8
+Version: 0.2.9
 
 **NOTE:** Please do not modify this file.
 Shih-Hsuan uses this file to track the project template version.
 
 ## Update log
+
+### 0.2.9
+
+- Update environment file to use Python 14 and SCons 4.10
 
 ### 0.2.8
 
