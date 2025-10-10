@@ -1,11 +1,16 @@
 # Project Template
 
-Version: 0.2.9
+Version: 0.2.10
 
 **NOTE:** Please do not modify this file.
 Shih-Hsuan uses this file to track the project template version.
 
 ## Update log
+
+### 0.2.10
+
+- Remove metadata from the `save_figure` function for PDF and HTML outputs
+- Explicitly treat figures as binary files
 
 ### 0.2.9
 
