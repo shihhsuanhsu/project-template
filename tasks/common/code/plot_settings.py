@@ -3,20 +3,19 @@
 # This script set the default behavior of plotly to simple_white.
 
 import itertools
+import pikepdf
 import plotly.io as pio
 import plotly.graph_objects as go
+import pandas as pd
 
 COLOR_SCALE = "Inferno"
 """color scale for the scatter plot"""
 
-MARKER_SIZE = 8
-"""size of the marker"""
-
-DEAFULT_WIDTH = 960
+DEFAULT_WIDTH = 960
 """default width of the figure"""
 DEFAULT_HEIGHT = 540
 """default height of the figure"""
-DEAFULT_WIDTH2 = 800
+DEFAULT_WIDTH2 = 800
 """default width of the figure"""
 DEFAULT_HEIGHT2 = 600
 """default height of the figure"""
@@ -33,6 +32,11 @@ INDICATOR_COLOR_SCALE = [
 RECESSION_COLOR = "lightgray"
 """color for the recession area"""
 
+LINE_OPACITY = 0.8
+"""opacity for the line"""
+CI_OPACITY = 0.2
+"""opacity for the confidence interval"""
+
 # modification of the default template
 pio.templates["my_mod"] = go.layout.Template(
     layout={
@@ -41,7 +45,7 @@ pio.templates["my_mod"] = go.layout.Template(
             "family": "Roboto",
         },
         "legend": {
-            "font": {"size": 12, "color": "black"},
+            "font": {"size": 14, "color": "black"},
             "traceorder": "normal",
         },
         "margin": {"l": 20, "r": 20, "t": 35, "b": 20},
@@ -50,9 +54,13 @@ pio.templates["my_mod"] = go.layout.Template(
         "title": {
             "font": {
                 "color": "black",
-            }
+            },
         },
-    }
+    },
+    data={
+        "scatter": [go.Scatter(line={"width": 2}, marker={"size": 6})],
+        "scattergl": [go.Scattergl(line={"width": 4}, marker={"size": 8})],
+    },
 )
 
 # set the default template
@@ -73,62 +81,62 @@ COLORS = [
     # ('rgba(127, 127, 127, 1)', 'rgba(127, 127, 127, 0.2)'),  # Gray
     ("rgba(188, 189, 34, 1)", "rgba(188, 189, 34, 0.2)"),  # Olive
     ("rgba(23, 190, 207, 1)", "rgba(23, 190, 207, 0.2)"),  # Cyan
-    ("rgba(255, 187, 120, 1)", "rgba(255, 187, 120, 0.2)"),  # Light Orange
-    ("rgba(152, 223, 138, 1)", "rgba(152, 223, 138, 0.2)"),  # Light Green
-    ("rgba(255, 152, 150, 1)", "rgba(255, 152, 150, 0.2)"),  # Light Red
-    ("rgba(197, 176, 213, 1)", "rgba(197, 176, 213, 0.2)"),  # Light Purple
-    ("rgba(196, 156, 148, 1)", "rgba(196, 156, 148, 0.2)"),  # Light Brown
-    ("rgba(247, 182, 210, 1)", "rgba(247, 182, 210, 0.2)"),  # Light Pink
-    ("rgba(199, 199, 199, 1)", "rgba(199, 199, 199, 0.2)"),  # Light Gray
-    ("rgba(219, 219, 141, 1)", "rgba(219, 219, 141, 0.2)"),  # Light Olive
-    ("rgba(158, 218, 229, 1)", "rgba(158, 218, 229, 0.2)"),  # Light Cyan
-    ("rgba(255, 205, 86, 1)", "rgba(255, 205, 86, 0.2)"),  # Yellow
-    ("rgba(75, 192, 192, 1)", "rgba(75, 192, 192, 0.2)"),  # Teal
-    ("rgba(255, 99, 132, 1)", "rgba(255, 99, 132, 0.2)"),  # Coral
-    ("rgba(153, 102, 255, 1)", "rgba(153, 102, 255, 0.2)"),  # Lavender
-    ("rgba(255, 159, 64, 1)", "rgba(255, 159, 64, 0.2)"),  # Orange-Yellow
-    ("rgba(54, 162, 235, 1)", "rgba(54, 162, 235, 0.2)"),  # Sky Blue
-    ("rgba(201, 203, 207, 1)", "rgba(201, 203, 207, 0.2)"),  # Light Blue Gray
-    ("rgba(255, 204, 204, 1)", "rgba(255, 204, 204, 0.2)"),  # Light Pink-Red
-    ("rgba(204, 235, 197, 1)", "rgba(204, 235, 197, 0.2)"),  # Light Mint
-    ("rgba(222, 203, 228, 1)", "rgba(222, 203, 228, 0.2)"),  # Light Lavender
-    ("rgba(255, 255, 179, 1)", "rgba(255, 255, 179, 0.2)"),  # Light Yellow
-    ("rgba(128, 222, 234, 1)", "rgba(128, 222, 234, 0.2)"),  # Light Teal
-    ("rgba(255, 153, 204, 1)", "rgba(255, 153, 204, 0.2)"),  # Light Coral
-    (
-        "rgba(204, 204, 255, 1)",
-        "rgba(204, 204, 255, 0.2)",
-    ),  # Light Lavender-Blue
-    (
-        "rgba(255, 204, 153, 1)",
-        "rgba(255, 204, 153, 0.2)",
-    ),  # Light Orange-Yellow
-    ("rgba(153, 204, 255, 1)", "rgba(153, 204, 255, 0.2)"),  # Light Sky Blue
-    ("rgba(229, 229, 229, 1)", "rgba(229, 229, 229, 0.2)"),  # Light Gray-White
-    ("rgba(255, 229, 229, 1)", "rgba(255, 229, 229, 0.2)"),  # Light Pink-White
-    ("rgba(229, 255, 229, 1)", "rgba(229, 255, 229, 0.2)"),  # Light Mint-White
-    (
-        "rgba(242, 229, 255, 1)",
-        "rgba(242, 229, 255, 0.2)",
-    ),  # Light Lavender-White
-    (
-        "rgba(255, 255, 229, 1)",
-        "rgba(255, 255, 229, 0.2)",
-    ),  # Light Yellow-White
-    ("rgba(204, 255, 255, 1)", "rgba(204, 255, 255, 0.2)"),  # Light Cyan-White
-    ("rgba(255, 229, 242, 1)", "rgba(255, 229, 242, 0.2)"),  # Light Coral-White
-    (
-        "rgba(229, 229, 255, 1)",
-        "rgba(229, 229, 255, 0.2)",
-    ),  # Light Lavender-Blue-White
-    (
-        "rgba(255, 242, 229, 1)",
-        "rgba(255, 242, 229, 0.2)",
-    ),  # Light Orange-Yellow-White
-    (
-        "rgba(229, 242, 255, 1)",
-        "rgba(229, 242, 255, 0.2)",
-    ),  # Light Sky Blue-White
+    # ("rgba(255, 187, 120, 1)", "rgba(255, 187, 120, 0.2)"),  # Light Orange
+    # ("rgba(152, 223, 138, 1)", "rgba(152, 223, 138, 0.2)"),  # Light Green
+    # ("rgba(255, 152, 150, 1)", "rgba(255, 152, 150, 0.2)"),  # Light Red
+    # ("rgba(197, 176, 213, 1)", "rgba(197, 176, 213, 0.2)"),  # Light Purple
+    # ("rgba(196, 156, 148, 1)", "rgba(196, 156, 148, 0.2)"),  # Light Brown
+    # ("rgba(247, 182, 210, 1)", "rgba(247, 182, 210, 0.2)"),  # Light Pink
+    # # ("rgba(199, 199, 199, 1)", "rgba(199, 199, 199, 0.2)"),  # Light Gray
+    # ("rgba(219, 219, 141, 1)", "rgba(219, 219, 141, 0.2)"),  # Light Olive
+    # ("rgba(158, 218, 229, 1)", "rgba(158, 218, 229, 0.2)"),  # Light Cyan
+    # ("rgba(255, 205, 86, 1)", "rgba(255, 205, 86, 0.2)"),  # Yellow
+    # ("rgba(75, 192, 192, 1)", "rgba(75, 192, 192, 0.2)"),  # Teal
+    # ("rgba(255, 99, 132, 1)", "rgba(255, 99, 132, 0.2)"),  # Coral
+    # ("rgba(153, 102, 255, 1)", "rgba(153, 102, 255, 0.2)"),  # Lavender
+    # ("rgba(255, 159, 64, 1)", "rgba(255, 159, 64, 0.2)"),  # Orange-Yellow
+    # ("rgba(54, 162, 235, 1)", "rgba(54, 162, 235, 0.2)"),  # Sky Blue
+    # # ("rgba(201, 203, 207, 1)", "rgba(201, 203, 207, 0.2)"),  # Light Blue Gray
+    # ("rgba(255, 204, 204, 1)", "rgba(255, 204, 204, 0.2)"),  # Light Pink-Red
+    # ("rgba(204, 235, 197, 1)", "rgba(204, 235, 197, 0.2)"),  # Light Mint
+    # ("rgba(222, 203, 228, 1)", "rgba(222, 203, 228, 0.2)"),  # Light Lavender
+    # ("rgba(255, 255, 179, 1)", "rgba(255, 255, 179, 0.2)"),  # Light Yellow
+    # ("rgba(128, 222, 234, 1)", "rgba(128, 222, 234, 0.2)"),  # Light Teal
+    # ("rgba(255, 153, 204, 1)", "rgba(255, 153, 204, 0.2)"),  # Light Coral
+    # (
+    #     "rgba(204, 204, 255, 1)",
+    #     "rgba(204, 204, 255, 0.2)",
+    # ),  # Light Lavender-Blue
+    # (
+    #     "rgba(255, 204, 153, 1)",
+    #     "rgba(255, 204, 153, 0.2)",
+    # ),  # Light Orange-Yellow
+    # ("rgba(153, 204, 255, 1)", "rgba(153, 204, 255, 0.2)"),  # Light Sky Blue
+    # # ("rgba(229, 229, 229, 1)", "rgba(229, 229, 229, 0.2)"),  # Light Gray-White
+    # ("rgba(255, 229, 229, 1)", "rgba(255, 229, 229, 0.2)"),  # Light Pink-White
+    # ("rgba(229, 255, 229, 1)", "rgba(229, 255, 229, 0.2)"),  # Light Mint-White
+    # (
+    #     "rgba(242, 229, 255, 1)",
+    #     "rgba(242, 229, 255, 0.2)",
+    # ),  # Light Lavender-White
+    # (
+    #     "rgba(255, 255, 229, 1)",
+    #     "rgba(255, 255, 229, 0.2)",
+    # ),  # Light Yellow-White
+    # ("rgba(204, 255, 255, 1)", "rgba(204, 255, 255, 0.2)"),  # Light Cyan-White
+    # ("rgba(255, 229, 242, 1)", "rgba(255, 229, 242, 0.2)"),  # Light Coral-White
+    # (
+    #     "rgba(229, 229, 255, 1)",
+    #     "rgba(229, 229, 255, 0.2)",
+    # ),  # Light Lavender-Blue-White
+    # (
+    #     "rgba(255, 242, 229, 1)",
+    #     "rgba(255, 242, 229, 0.2)",
+    # ),  # Light Orange-Yellow-White
+    # (
+    #     "rgba(229, 242, 255, 1)",
+    #     "rgba(229, 242, 255, 0.2)",
+    # ),  # Light Sky Blue-White
 ]
 
 
@@ -146,13 +154,44 @@ def marker_iter():
     return itertools.cycle([0, 2, 4, 1, 3, 17, 18, 22, 23, 24])
 
 
+def remove_pdf_metadata(filepath: str) -> None:
+    """Aggressively remove all variable metadata from PDF."""
+    with pikepdf.open(filepath, allow_overwriting_input=True) as pdf:
+        # Remove XMP metadata
+        with pdf.open_metadata(
+            set_pikepdf_as_editor=False, update_docinfo=False
+        ) as meta:
+            meta.clear()
+
+        # Remove Info dictionary entirely
+        if "/Info" in pdf.trailer:
+            del pdf.trailer["/Info"]
+
+        # Remove ID array (contains unique identifiers)
+        if "/ID" in pdf.trailer:
+            del pdf.trailer["/ID"]
+
+        # Remove Metadata stream from catalog
+        if "/Metadata" in pdf.Root:
+            del pdf.Root["/Metadata"]
+
+        # Save without compression variations
+        pdf.save(
+            filepath,
+            linearize=False,  # Disable linearization (web optimization)
+            compress_streams=True,
+            stream_decode_level=pikepdf.StreamDecodeLevel.generalized,
+            deterministic_id=True,
+        )
+
+
 def save_figure(
     fig: go.Figure,
     name: str,
-    width: int = DEAFULT_WIDTH,
+    width: int = DEFAULT_WIDTH,
     height: int = DEFAULT_HEIGHT,
     two_aspect_ratio: bool = False,
-    width2: int = DEAFULT_WIDTH2,
+    width2: int = DEFAULT_WIDTH2,
     height2: int = DEFAULT_HEIGHT2,
 ) -> None:
     """
@@ -160,12 +199,61 @@ def save_figure(
     """
     for format in IMAGE_FORMATS:
         if format == "html":
-            fig.write_html(f"../output/{name}.html")
+            # Save with a fixed plotly.js version for consistency
+            fig.write_html(
+                f"../output/{name}.html",
+                include_plotlyjs="cdn",  # Fixed version
+                config={"displayModeBar": False},
+                auto_open=False,
+                div_id="plot",  # Fixed div ID instead of random
+            )
         else:
             fig.write_image(
-                f"../output/{name}.{format}", width=width, height=height
+                f"../output/{name}.{format}",
+                width=width,
+                height=height,
+                engine="kaleido",  # Explicitly specify engine for consistency
             )
             if two_aspect_ratio:
                 fig.write_image(
-                    f"../output/{name}_2.{format}", width=width2, height=height2
+                    f"../output/{name}_2.{format}",
+                    width=width2,
+                    height=height2,
+                    engine="kaleido",
                 )
+            if format.lower() == "pdf":
+                print(f"Removing metadata from ../output/{name}.{format}")
+                remove_pdf_metadata(f"../output/{name}.{format}")
+                if two_aspect_ratio:
+                    remove_pdf_metadata(f"../output/{name}_2.{format}")
+
+
+def construct_shapes(
+    df: pd.DataFrame,
+    col_name: str,
+    date_name: str,
+    xref: str = "x",
+    yref: str = "paper",
+) -> list[dict]:
+    """
+    Construct shapes for the recession periods.
+    """
+    recession_periods = df[col_name].ne(df[col_name].shift()).cumsum()
+    groups = df[df[col_name] == 1].groupby(recession_periods)
+    return [
+        {
+            "type": "rect",
+            "x0": group[date_name].iloc[0],
+            "x1": group[date_name].iloc[-1],
+            "y0": 0,
+            "y1": 1,
+            "xref": xref,
+            "yref": yref,
+            "fillcolor": RECESSION_COLOR,
+            "opacity": 0.5,
+            "layer": "below",
+            "line_width": 0,
+        }
+        for _, group in groups
+        if not group.empty
+    ]
