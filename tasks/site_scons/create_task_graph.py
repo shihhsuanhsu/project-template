@@ -8,8 +8,6 @@ def create_task_graph(env):
     Create a task graph using Graphviz.
     Assume working directory is the project tasks directory.
     """
-    import os
-    import re
     from SCons.Util import render_tree
     import graphviz
 
