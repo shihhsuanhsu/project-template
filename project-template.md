@@ -1,11 +1,16 @@
 # Project Template
 
-Version: 0.2.10
+Version: 0.2.11
 
 **NOTE:** Please do not modify this file.
 Shih-Hsuan uses this file to track the project template version.
 
 ## Update log
+
+### 0.2.11
+
+- Rollback to Python 13 because `pystata` is not compatible with Python 14
+  - A weird bug related to importing `sfi`
 
 ### 0.2.10
 
