@@ -5,7 +5,7 @@ This directory contains tutorials on technologies used in this project.
 ## Getting Started
 
 Please make sure you are familiar with Git and Github
-    (see [`git_and_github.md](git_and_github.md) for help).
+    (see [`git_and_github.md`](git_and_github.md) for help).
 Follow [`python.md`](python.md) to set up the Conda environment.
 If you need a text editor,
     we strongly recommend [VSCode](https://code.visualstudio.com).
@@ -19,6 +19,7 @@ In a task folder there are usually the following:
 - `code` directory: code used by this task to create the outputs
 - `input` directory: files needed to create the output (e.g. datasets)
 - `output` directory: outputs (e.g. cleaned datasets, plots, tables, etc.)
+- `logs` directory: log files from code executions
 - `README.md`: a simple description of what this task does
 - `SConscript`: SCons script for build automation
     (tracking file decencies and building outputs).

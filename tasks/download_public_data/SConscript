@@ -1,7 +1,7 @@
 Import("env")
 
 FRED_TARGETS = []
-"""list of FRED targets for preventing parallelism"""
+"""list of FRED targets for preventing parallelism. FRED does not like parallel requests."""
 
 env.Links(
     target=[
@@ -12,6 +12,9 @@ env.Links(
     ],
 )
 
+# don't forget to add the FRED API key to the `secrets` directory
+
+# download FRED data
 # for data in [
 #     ("FEDFUNDS", "us_ffr"),
 #     ("UNRATE", "us_unrate"),
@@ -23,7 +26,7 @@ env.Links(
 #             target=f"output/{output_file}.csv",
 #             source=["code/download_fred.py", "code/fred_api.py"],
 #             ARGS=[series, output_file],
-#             LOG_FILE=f"code/{output_file}.log",
+#             LOG_FILE=f"logs/{output_file}.log",
 #         )
 #     )
 
