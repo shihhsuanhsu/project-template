@@ -74,8 +74,9 @@ For example, the code might use a dataset, which should be included in the sourc
 To specify arguments when running a script (Python, Julia, or Stata),
     use the `ARGS` parameter in the builder.
 All the print statements and error messages in the scripts are redirected to
-    a log file with the same filename as the first source file but with a `.log` extension,
-    mimicking the behavior of Stata in batch mode.
+    a log file with the same filename as the first source file (unless otherwise specified)
+    but with a `.log` extension,
+    at a `logs` directory by default.
 To store the log file with a different name or path,
     set the `LOG_FILE` parameter when calling the builder.
 For example, the code below stores the log file to a different path:
@@ -134,7 +135,7 @@ To create the task graph:
 2. Enable it in `tasks/SConstruct`
 
 This visualization helps you understand task relationships and pipeline flow.
-For example, the task graph below implies that the `write_up` task 
+For example, the task graph below implies that the `write_up` task
     depends on `scons_demo`.
 ![sample_task_graph](sample_task_graph.png)
 Task graph will be stored in `tasks/task_graph/output/task_graph.png`.

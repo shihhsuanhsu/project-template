@@ -7,16 +7,20 @@ This project template delegates these tasks to [SCons](https://scons.org),
 Once you specify the dependencies, SCons determines the correct execution sequence.
 When files change (e.g., data cleaning scripts or new data),
     SCons intelligently runs only the affected scripts instead of reprocessing everything.
+This project template includes custom builders for executing Python, Stata, Julia, etc.
+    (see [`docs/tutorials/scons.md#builders`](docs/tutorials/scons.md#builders)).
+
 This template builds on [Jonathan Dingel's project template](https://github.com/jdingel/projecttemplate)
     but uses SCons instead of [GNU make](https://www.gnu.org/software/make/).
 While both tools have merits, I think SCons provides better cross-platform compatibility.
-
 I recommend avoiding command-line tools (`cp`, `grep`, `awk`, `wget`, etc.)
     and shell scripts in favor of Python scripts.
 This ensures consistent behavior across different operating systems
     where command-line tools may be missing or behave differently.
 
-**NOTE**: This template is actively developed and currently passes basic functionality tests.
+**NOTE**: This template is actively developed and currently passes basic functionality tests
+    on Ubuntu and MacOS.
+I will test this on Windows in the future.
 Please report bugs or request features through
     [GitHub Issues](https://github.com/shihhsuanhsu/project-template/issues).
 
@@ -34,6 +38,7 @@ task_name/
 │   └── main_script.py
 ├── input/             # Dependencies and data (optional)
 ├── output/            # Generated results (optional)
+├── logs/              # Store the logs from code execution (optional)
 ├── README.md          # Task description
 └── SConscript         # Dependency specification
 ```
@@ -54,14 +59,6 @@ SCons automatically generates a task dependency graph each time you run it
     (if enabled in `tasks/SConstruct` and have Graphviz installed).
 This visualization helps you understand task relationships and pipeline flow.
 Find the graph at `tasks/task_graph/output/task_graph.png`.
-
-### Collaboration Workflow
-
-**Recommended Tools:**
-- **Task Management**: GitHub Issues with to-do lists and member assignments
-- **Code Review**: GitHub Pull Requests linked to relevant issues
-- **Documentation**: Store research results and meeting notes
-    in the `docs` directory using Markdown
 
 ## Quick Start Guide
 
@@ -89,4 +86,4 @@ Find the graph at `tasks/task_graph/output/task_graph.png`.
 
 ## Additional Resources
 
-Some tutorials and documentation are available in `docs/tutorials`.
+Some tutorials and documentation are available in [`docs/tutorials`](docs/tutorials).
