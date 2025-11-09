@@ -233,7 +233,7 @@ def check_pdf_compiler_action(env):
     """
     This function is used to check if the PDF compiler is available.
     """
-    pdf_compiler = env.get("PDF_COMPILER", "lualatex")
+    pdf_compiler = env.get("PDF_COMPILER", "latexmk")
     runner = subprocess.run(
         [pdf_compiler, "--version"],
         stdout=subprocess.DEVNULL,
@@ -249,7 +249,7 @@ def pdf_build_action(target, source, env):
     """
     if not check_pdf_compiler_action(env):
         # get the PDF compiler
-        pdf_compiler = env.get("PDF_COMPILER", "lualatex")
+        pdf_compiler = env.get("PDF_COMPILER", "latexmk")
         # set the output directory
         otuput_dir = os.path.relpath(
             os.path.split(str(target[0]))[0],

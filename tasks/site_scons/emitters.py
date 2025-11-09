@@ -78,6 +78,8 @@ def pdf_emitter(target, source, env):
         were specified for: output/sample.pdf`.
     """
     target_path = os.path.abspath(str(target[0])).replace(".pdf", "")
+    source_path = os.path.abspath(str(source[0])).replace(".tex", "")
+    # remove the fls file if it exists
     fls_path = f"{target_path}.fls"
     if os.path.exists(fls_path):
         os.remove(fls_path)
@@ -99,14 +101,12 @@ def pdf_emitter(target, source, env):
             "fdb_latexmk",
             "nav",
             "out",
+            "vrb",
         ]:
             if os.path.exists(f"{target_path}.{ext}"):
                 add_targets.append(f"{target_path}.{ext}")
         # handle minted folder
-        tex_filename = os.path.split(target_path)[-1]
-        minted_folder = target_path.replace(
-            tex_filename, f"_minted-{tex_filename}/"
-        )
+        minted_folder = source_path.split("code")[0] + "code/_minted"
         if os.path.exists(minted_folder):
             env.Clean(target, minted_folder)
         return target + add_targets, source

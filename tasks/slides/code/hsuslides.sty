@@ -15,14 +15,14 @@
 \usepackage{bibentry}
 \usepackage{usebib}
 \usepackage{hyperref}
-\usepackage[outputdir=../output]{minted}
+% \usepackage{minted} % need to pip install latexminted
 \usepackage{newunicodechar}
 \usepackage{graphicx}
 \usepackage{tikz}
 \usepackage{roboto}
 
-% beamer theme
-\usetheme{boxes}
+% use a basic beamer theme
+\usetheme{default}
 
 % get rid of navigation symbols
 \setbeamertemplate{navigation symbols}{}
@@ -44,6 +44,15 @@
     \setcounter{framenumber}{0}%
 }
 
+% no counter in framebreaks
+\setbeamertemplate{frametitle continuation}{}
+
+% add caption numbers
+\setbeamertemplate{caption}[numbered]
+
+% fix caption centering
+\usepackage[font=scriptsize,justification=centering]{caption}
+
 % define my colors
 \definecolor{themeblue}{RGB}{51, 153, 255}
 
@@ -58,14 +67,6 @@
 \setbeamerfont{frametitle}{shape=\scshape}
 \setbeamerfont{title}{shape=\scshape}
 
-% add caption numbers
-\setbeamertemplate{caption}[numbered]
-% no counter in framebreaks
-\setbeamertemplate{frametitle continuation}{}
-
-% fix caption centering
-\usepackage[font=scriptsize,justification=centering]{caption}
-
 % define command for coloring text
 \newcommand{\black}[1]{\textcolor{black}{#1}}
 \newcommand{\red}[1]{\textcolor{red}{#1}}
@@ -75,11 +76,17 @@
 \newcommand{\gray}[1]{\textcolor{gray}{#1}}
 \newcommand{\white}[1]{\textcolor{white}{#1}}
 
+% increase font size
+\setbeamerfont{title}{size=\huge}
+\setbeamerfont{subtitle}{size=\LARGE}
+\setbeamerfont{frametitle}{size=\LARGE}
+
+
 % spread out bullet points in itemize and enumerate
 \newcommand{\wideitem}[1][\fill]{\setlength{\itemsep}{#1}\item}
 \newcommand{\vertispace}[0]{\item[] }
 
-% so minted can read unicode characters
+% so minted can read unicode characters in code
 \DeclareUnicodeCharacter{394}{$\Delta$}
 \DeclareUnicodeCharacter{398}{$\Theta$}
 \DeclareUnicodeCharacter{3A6}{$\Phi$}
@@ -112,6 +119,3 @@
 % set up bibliography
 \usepackage[authoryear]{natbib}
 \bibliographystyle{aea}
-
-% set up a command for questions for audiences
-\newcommand{\question}[1]{\textcolor{blue}{\textit{#1}}}

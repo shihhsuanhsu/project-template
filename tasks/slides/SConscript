@@ -1,0 +1,16 @@
+"""
+Shih-Hsuan Hsu
+Nov. 8, 2025
+This is a sample SConscript file that demonstrates how to run a Latex builder
+    and the output shows the my beamer slides style.
+"""
+
+# import the given environment
+Import("env")
+
+# run a PDF builder
+# NOTE: This requires `pdflatex` to be installed on the system.
+env.PDF(
+    target="output/sample_slides.pdf",
+    source=["code/sample_slides.tex"],
+)
