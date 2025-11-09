@@ -1,11 +1,17 @@
 # Project Template
 
-Version: 0.2.11
+Version: 0.2.12
 
 **NOTE:** Please do not modify this file.
 Shih-Hsuan uses this file to track the project template version.
 
 ## Update log
+
+### 0.2.12
+
+- Update slides template
+- Add a `slides` task example
+- Use `latexmk` instead of `lualatex` as the default latex compiler
 
 ### 0.2.11
 
