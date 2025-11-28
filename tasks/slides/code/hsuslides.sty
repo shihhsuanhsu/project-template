@@ -2,7 +2,6 @@
 \usepackage{enumerate}
 \usepackage{bookmark}
 \usepackage{fancyhdr}
-\usepackage{lastpage}
 \usepackage{float}
 \usepackage{pdfpages}
 \usepackage{longtable}
@@ -20,6 +19,7 @@
 \usepackage{graphicx}
 \usepackage{tikz}
 \usepackage{roboto}
+\usepackage{transparent}
 
 % use a basic beamer theme
 \usetheme{default}
@@ -54,7 +54,9 @@
 \usepackage[font=scriptsize,justification=centering]{caption}
 
 % define my colors
-\definecolor{themeblue}{RGB}{51, 153, 255}
+\definecolor{themeblue}{RGB}{1, 115, 178}
+\definecolor{emphasize}{RGB}{222, 143, 5}
+\definecolor{citation}{RGB}{2, 158, 115}
 
 % change title colors
 \setbeamercolor{titlelike}{parent=structure,fg=themeblue}
@@ -64,22 +66,25 @@
 
 % change default font
 \usefonttheme{structurebold}
-\setbeamerfont{frametitle}{shape=\scshape}
-\setbeamerfont{title}{shape=\scshape}
 
 % define command for coloring text
 \newcommand{\black}[1]{\textcolor{black}{#1}}
 \newcommand{\red}[1]{\textcolor{red}{#1}}
 \newcommand{\blue}[1]{\textcolor{blue}{#1}}
-\newcommand{\orange}[1]{\textcolor{utorange}{#1}}
 \newcommand{\teal}[1]{\textcolor{teal}{#1}}
 \newcommand{\gray}[1]{\textcolor{gray}{#1}}
 \newcommand{\white}[1]{\textcolor{white}{#1}}
 
-% increase font size
-\setbeamerfont{title}{size=\huge}
-\setbeamerfont{subtitle}{size=\LARGE}
-\setbeamerfont{frametitle}{size=\LARGE}
+% temporal command for highlighting text
+\newcommand{\focus}[2]{
+    % \temporal<#1>{}{{\color{themeblue}#2}}{#2}
+    {\alt<#1>{\color{themeblue}}{\color{black}}#2}
+}
+
+% % increase font size
+% \setbeamerfont{title}{size=\huge}
+% \setbeamerfont{subtitle}{size=\Large}
+% \setbeamerfont{frametitle}{size=\Large}
 
 
 % spread out bullet points in itemize and enumerate
@@ -112,10 +117,14 @@
 \hypersetup{
     colorlinks,
     linkcolor={blue!75!black},
-    citecolor={blue!75!black},
+    citecolor={citation},
     urlcolor={cyan!75!black}
 }
 
 % set up bibliography
 \usepackage[authoryear]{natbib}
 \bibliographystyle{aea}
+
+% override the cite command to use color citation (fixing the ); color issue)
+\let\oldcite\cite
+\renewcommand{\cite}[1]{{\color{citation}\oldcite{#1}}}
