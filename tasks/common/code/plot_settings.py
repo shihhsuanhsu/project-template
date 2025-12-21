@@ -80,8 +80,8 @@ CUSTOM_TEMPLATE = {
 """custom template for the plots (16 by 9 aspect ratio)"""
 CUSTOM_TEMPLATE_32 = CUSTOM_TEMPLATE.copy()
 """custom template for the plots (3 by 2 aspect ratio)"""
-CUSTOM_TEMPLATE_32["layout"]["font"]["size"] += 2
-CUSTOM_TEMPLATE_32["layout"]["legend"]["font"]["size"] += 2
+CUSTOM_TEMPLATE_32["layout"]["font"]["size"] += 4
+CUSTOM_TEMPLATE_32["layout"]["legend"]["font"]["size"] += 4
 CUSTOM_TEMPLATE_32["data"]["scatter"][0]["line"]["width"] += 1
 CUSTOM_TEMPLATE_32["data"]["scattergl"][0]["line"]["width"] += 1
 CUSTOM_TEMPLATE_32["data"]["scatter"][0]["marker"]["size"] += 1
@@ -96,15 +96,16 @@ pio.templates["my_mod_32"] = go.layout.Template(CUSTOM_TEMPLATE_32)
 pio.templates.default = "simple_white+my_mod"
 
 COLORS = [
-    (1, 115, 178),  # Blue
-    (222, 143, 5),  # Orange
-    (204, 120, 188),  # Magenta
-    (2, 158, 115),  # Cyan
-    (236, 225, 51),  # Yellow
+    (0, 114, 178),  # Blue
+    (230, 159, 0),  # Orange
+    (204, 121, 167),  # Magenta
+    (0, 158, 115),  # Green
+    (240, 228, 66),  # Yellow
     (213, 94, 0),  # Vermillion
+    (86, 180, 233),  # Sky Blue
     (148, 148, 148),  # Gray
 ]
-"""List of colors in RGB format."""
+"""List of colors in RGB format. From: https://siegal.bio.nyu.edu/color-palette/"""
 
 MARKERS = [0, 2, 4, 1, 3, 17, 18, 22, 23, 24]
 

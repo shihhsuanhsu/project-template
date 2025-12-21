@@ -19,7 +19,11 @@
 \usepackage{graphicx}
 \usepackage{tikz}
 \usepackage{roboto}
+\usepackage[T1]{fontenc}
 \usepackage{transparent}
+
+% Set semibold as the default weight
+\renewcommand{\seriesdefault}{sb}
 
 % use a basic beamer theme
 \usetheme{default}
@@ -54,15 +58,18 @@
 \usepackage[font=scriptsize,justification=centering]{caption}
 
 % define my colors
-\definecolor{themeblue}{RGB}{1, 115, 178}
-\definecolor{emphasize}{RGB}{222, 143, 5}
-\definecolor{citation}{RGB}{2, 158, 115}
+\definecolor{figblue}{RGB}{0, 114, 178}
+\definecolor{figorange}{RGB}{230, 159, 0}
+\definecolor{figmagenta}{RGB}{204, 121, 167}
+\definecolor{figgreen}{RGB}{0, 158, 115}
+\definecolor{figyellow}{RGB}{240, 228, 66}
+\definecolor{figvermillion}{RGB}{213, 94, 0}
+\definecolor{figskyblue}{RGB}{86, 180, 233}
+\definecolor{figgray}{RGB}{148, 148, 148}
 
-% change title colors
-\setbeamercolor{titlelike}{parent=structure,fg=themeblue}
-% change bulletpoint colors and style
-\setbeamertemplate{itemize item}{\color{themeblue}$\blacktriangleright$}
-\setbeamertemplate{itemize subitem}{\color{themeblue}\scriptsize$\blacksquare$}
+\colorlet{themeblue}{figblue}
+\colorlet{emphasize}{figorange}
+\definecolor{citation}{RGB}{128, 128, 128}
 
 % change default font
 \usefonttheme{structurebold}
@@ -75,10 +82,40 @@
 \newcommand{\gray}[1]{\textcolor{gray}{#1}}
 \newcommand{\white}[1]{\textcolor{white}{#1}}
 
+% set up colors for links
+\hypersetup{
+    colorlinks,
+    linkcolor={themeblue},
+    citecolor={citation},
+    urlcolor={cyan!75!black},
+}
+
+% change title colors
+\setbeamercolor{titlelike}{parent=structure,fg=themeblue}
+
+% Change bulletpoint colors
+\setbeamercolor{itemize item}{fg=themeblue}
+\setbeamercolor{itemize subitem}{fg=themeblue}
+
+% Change bulletpoint style
+\setbeamertemplate{itemize item}{$\blacktriangleright$}
+\setbeamertemplate{itemize subitem}{\scriptsize$\blacksquare$}
+
+% Change enumerate number colors
+\setbeamercolor{enumerate item}{fg=themeblue}
+\setbeamercolor{enumerate subitem}{fg=themeblue}
+
+% Change enumerate number boxes (for themes that use boxes/circles)
+\setbeamercolor{item projected}{bg=themeblue,fg=white}
+
 % temporal command for highlighting text
 \newcommand{\focus}[2]{
     % \temporal<#1>{}{{\color{themeblue}#2}}{#2}
     {\alt<#1>{\color{themeblue}}{\color{black}}#2}
+}
+% temporal command for highlighting text
+\newcommand{\focustemporal}[2]{
+    \temporal<#1>{}{{\color{themeblue}#2}}{{\transparent{0.5} #2}}
 }
 
 % % increase font size
@@ -112,14 +149,6 @@
 
 % character for emdash
 \newunicodechar{─}{\textemdash}
-
-% set up colors for links
-\hypersetup{
-    colorlinks,
-    linkcolor={blue!75!black},
-    citecolor={citation},
-    urlcolor={cyan!75!black}
-}
 
 % set up bibliography
 \usepackage[authoryear]{natbib}
