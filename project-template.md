@@ -1,11 +1,15 @@
 # Project Template
 
-Version: 0.2.14
+Version: 0.2.15
 
 **NOTE:** Please do not modify this file.
 Shih-Hsuan uses this file to track the project template version.
 
 ## Update log
+
+### 0.2.15
+
+- Add a new feature to store MD5
 
 ### 0.2.14
 

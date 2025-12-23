@@ -7,6 +7,7 @@ This file contains all the build actions that can be used
 
 import os
 import subprocess
+import json
 from pathlib import Path
 from helpers import create_log_file_path, parse_args
 from custom_warnings import (
@@ -14,6 +15,7 @@ from custom_warnings import (
     no_pdf_compiler,
     file_not_found_warning,
 )
+from helpers import calculate_md5, create_md5_file_path
 
 
 def copy_file_with_metadata(src, dst):
@@ -308,3 +310,21 @@ def no_action(target, source, env):
     Returns the status code in the environment variable `STATUS`.
     """
     return int(env.get("STATUS", 0))
+
+
+def store_md5_action(target, source, env):
+    """
+    This function is used to store the MD5 hash of the target files
+    in a JSON file.
+    """
+    if env.get("STORE_MD5", False):
+        for target_file in target:
+            target_file = str(target_file)
+            if "output" in target_file:
+                md5_file_path = create_md5_file_path(env, target_file)
+                # calculate the MD5 hash of the source file
+                md5_hash = calculate_md5(target_file)
+                # write the MD5 hash to the file
+                with open(md5_file_path, "w") as f:
+                    json.dump(md5_hash, f, indent=4)
+    return 0

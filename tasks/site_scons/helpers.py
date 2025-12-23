@@ -5,6 +5,9 @@ Helper functions for SCons environment.
 """
 
 import os
+import hashlib
+from pathlib import Path
+from datetime import datetime
 from custom_warnings import space_in_arg_warning
 
 
@@ -70,3 +73,50 @@ def parse_args(env, wrap_in_quotes=False):
             arg = f'"{arg}"'
         parsed_args.append(arg)
     return parsed_args
+
+
+def calculate_md5(filepath: str | Path) -> dict[str, str]:
+    """
+    Calculate MD5 hash of a file.
+    Args:
+        filepath (str or Path): Path to the file.
+    Returns:
+        dict[str, str]: Dictionary containing the file path, MD5 hash, and timestamp.
+    """
+    # calculate MD5 hash
+    hash_md5 = hashlib.md5()
+    with open(filepath, "rb") as f:
+        for chunk in iter(lambda: f.read(4096), b""):
+            hash_md5.update(chunk)
+    # capture timestamp
+    timestamp = datetime.now().astimezone().strftime("%B-%d-%Y %H:%M:%S %Z")
+    # convert filepath to relative path relative to the project root
+    filepath = "tasks/".join(str(Path(filepath).resolve()).split("tasks/")[1:])
+    # store the results
+    results = {
+        "file": str(filepath),
+        "md5": hash_md5.hexdigest(),
+        "timestamp": timestamp,
+    }
+    return results
+
+
+def create_md5_file_path(env, target):
+    """
+    This function creates a md5 file path based on the target file and extension.
+    """
+    md5_file_path = env.get("MD5_FILE", "")
+    md5_dir = env.get("MD5_DIR", "md5")
+    target = target[0] if isinstance(target, list) else target
+    if md5_file_path == "":
+        # no md5 file given, use the target file name
+        md5_file_path = str(target).replace("output", md5_dir) + "_md5.json"
+    else:
+        # use absolute path to avoid path issues
+        if not os.path.isabs(md5_file_path):
+            md5_file_path = os.path.join(
+                env.Dir(".").srcnode().abspath, md5_file_path
+            )
+        # only modify $MD5_FILE if it was given to avoid modifying env
+        env["MD5_FILE"] = md5_file_path
+    return md5_file_path

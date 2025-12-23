@@ -119,6 +119,20 @@ If you want to copy the file rather than creating a symbolic link,
     set the parameter `COPY` to `True` when using the `Link` builder.
 The `Links` builder is provided for linking multiple files.
 
+If you'd like to track the MD5 of all the targets in the output directory,  
+    supply `STORE_MD5 = True` to the builder (does not work with `Link` and `Links`).
+For example,
+```python
+env.Download(
+    target=["output/cool_dataset.csv"],
+    source=["https:/cool_datasets/data1.csv"],
+    STORE_MD5 = True
+)
+```
+All the files in the target parameter that are stored in the `output` directory 
+    will have MD5 stored in `md5` directory under the task.
+The intended use of this feature is for storing the MD5 of downloaded data.
+
 ### Build the project
 
 After writing the code and `SConscript` files,

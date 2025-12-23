@@ -6,7 +6,9 @@ This file contains all the emitters that can be used
 """
 
 import os
-from actions import check_pdf_compiler_action, create_log_file_path
+import json
+from helpers import create_log_file_path, create_md5_file_path
+from actions import check_pdf_compiler_action
 
 
 def add_log_to_target(target, source, env, ext):
@@ -63,6 +65,23 @@ def link_emitter(target, source, *_, **__):
         raise ValueError(
             "The number of target files must be the same as the number of source files."
         )
+    return target, source
+
+
+def md5_emitter(target, source, env):
+    """
+    This function is used to create an MD5 hash file
+        as an additional target for the given source file.
+    """
+    if env.get("STORE_MD5", False):
+        md5_files = []
+        for target_file in target:
+            target_file = str(target_file)
+            if "output" in target_file:
+                # compute MD5 for output files
+                md5_file_path = create_md5_file_path(env, target_file)
+                md5_files.append(md5_file_path)
+        target += md5_files
     return target, source
 
 

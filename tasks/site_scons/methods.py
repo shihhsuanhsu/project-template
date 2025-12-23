@@ -119,7 +119,7 @@ def make_links(
         )
 
 
-def download_file(self, target, source):
+def download_file(self, target, source, *args, **kwargs):
     """
     Download a file from a URL (source) to the target path.
     """
@@ -139,10 +139,11 @@ def download_file(self, target, source):
         source="#/common/code/download_file.py",
         ARGS=[source, str(target_abspath)],
         LOG_FILE=str(log_file),
+        **kwargs,
     )
 
 
-def download_files(self, target: list, source: list):
+def download_files(self, target: list, source: list, *args, **kwargs):
     """
     Download multiple files from URLs to the target paths.
     The order of the target and source files must match.
@@ -163,6 +164,8 @@ def download_files(self, target: list, source: list):
                 self.Download(
                     target=t,
                     source=s,
+                    *args,
+                    **kwargs,
                 )
                 for t, s in zip(target, source)
             ]

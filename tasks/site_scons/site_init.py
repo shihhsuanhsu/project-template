@@ -18,6 +18,7 @@ from actions import (
     pdf_build_action,
     check_target_exist_action,
     no_action,
+    store_md5_action,
 )
 from emitters import (
     python_emitter,
@@ -27,6 +28,7 @@ from emitters import (
     matlab_emitter,
     dynare_emitter,
     pdf_emitter,
+    md5_emitter,
 )
 from methods import make_link_now, make_links, download_file, download_files
 from scanners import remove_latex_scanner
@@ -99,6 +101,7 @@ def add_post_action_to_all(env):
         def wrapper(*args, **kwargs):
             result = original_builder(*args, **kwargs)
             env.AddPostAction(result, check_target_exist_action)
+            env.AddPostAction(result, store_md5_action)
             return result
 
         return wrapper
@@ -106,6 +109,24 @@ def add_post_action_to_all(env):
     # apply wrapper to all builders
     for builder_name, builder in original_builders.items():
         env["BUILDERS"][builder_name] = create_wrapper(builder)
+
+
+def add_md5_emitter_to_all(env):
+    """
+    This function adds the md5 emitter to all builders in the environment.
+    """
+    for builder_name in env["BUILDERS"]:
+        builder = env["BUILDERS"][builder_name]
+        original_emitter = builder.emitter
+
+        def combined_emitter(
+            target, source, env, original_emitter=original_emitter
+        ):
+            if original_emitter is not None:
+                target, source = original_emitter(target, source, env)
+            return md5_emitter(target, source, env)
+
+        builder.emitter = combined_emitter
 
 
 def init_env():
@@ -144,6 +165,8 @@ def init_env():
     env.AddMethod(download_file, "Download")
     # attach the download_files function
     env.AddMethod(download_files, "Downloads")
+    # add md5 emitter to all builders
+    add_md5_emitter_to_all(env)
     # add post action to all builders
     add_post_action_to_all(env)
     return env
