@@ -14,6 +14,7 @@ from custom_warnings import (
     no_symlink_permission,
     no_pdf_compiler,
     file_not_found_warning,
+    no_build_warning,
 )
 from helpers import calculate_md5, create_md5_file_path
 
@@ -104,6 +105,10 @@ def stata_build_action(source, env, *_, **__):
     Any print statements in the source files will be redirected to a log file
     with the same name as the source file, but with a `.log` extension.
     """
+    # directly mark a build as successful (helpful when skipping a build)
+    if env.get("SUCCESS", False):
+        no_build_warning(f"Stata action to execute {source[0]} skipped.")
+        return 0
     # get directory and filename
     dir_name, filename = os.path.split(str(source[0]))
     # get stata runner location
@@ -136,6 +141,10 @@ def generic_build_action(source, env, program, ext, *_, **__):
     Any print statements in the source files will be redirected to a log file
     with the same name as the source file, but with a `.log` extension.
     """
+    # directly mark a build as successful (helpful when skipping a build)
+    if env.get("SUCCESS", False):
+        no_build_warning(f"{program.title()} action for {source[0]} skipped.")
+        return 0
     # get directory and filename
     dir_name, filename = os.path.split(str(source[0]))
     log_file_path = create_log_file_path(env, source, ext)
@@ -193,6 +202,10 @@ def matlab_build_action(target, source, env, dynare=False):
     **NOTE**: Matlab scripts do not take arguments,
     so the arguments are passed as a environmental variable named `ARGS`.
     """
+    # directly mark a build as successful (helpful when skipping a build)
+    if env.get("SUCCESS", False):
+        no_build_warning(f"Matlab action for {source[0]} skipped.")
+        return 0
     # parse arguments as environmental variables,
     # because matlab scripts do not take arguments
     arguments = parse_args(env)

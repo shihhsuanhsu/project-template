@@ -32,3 +32,4 @@ env.Links(
 
 # prevent parallelism for FRED targets
 env.SideEffect(".PREVENT_PARALLEL_FRED", FRED_TARGETS)
+env.NoClean(FRED_TARGETS) # don't delete the downloaded FRED data when cleaning
