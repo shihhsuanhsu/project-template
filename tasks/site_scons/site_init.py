@@ -18,7 +18,6 @@ from actions import (
     pdf_build_action,
     check_target_exist_action,
     no_action,
-    store_md5_action,
 )
 from emitters import (
     python_emitter,
@@ -100,8 +99,8 @@ def add_post_action_to_all(env):
     def create_wrapper(original_builder):
         def wrapper(*args, **kwargs):
             result = original_builder(*args, **kwargs)
+            # check if the target exists and print a warning if it doesn't
             env.AddPostAction(result, check_target_exist_action)
-            env.AddPostAction(result, store_md5_action)
             return result
 
         return wrapper

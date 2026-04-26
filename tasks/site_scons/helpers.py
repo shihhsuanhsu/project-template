@@ -104,6 +104,7 @@ def calculate_md5(filepath: str | Path) -> dict[str, str]:
 def create_md5_file_path(env, target):
     """
     This function creates a md5 file path based on the target file and extension.
+    Does not actually create the md5 file, just returns the path.
     """
     md5_file_path = env.get("MD5_FILE", "")
     md5_dir = env.get("MD5_DIR", "md5")

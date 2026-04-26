@@ -51,6 +51,7 @@ class SpaceInArgWarning(CustomWarning):
     This is used in the `parse_args` function.
     """
 
+
 class NoBuildWarning(CustomWarning):
     """
     A warning class for SCons to warn users when a action is skipped.
@@ -92,11 +93,13 @@ def space_in_arg_warning(arg, parse_arg):
     """
     warn(SpaceInArgWarning, f"`{arg}`=> `{parse_arg}`")
 
+
 def no_build_warning(message):
     """
     Issue a warning message when a build is skipped.
     """
     warn(NoBuildWarning, message)
+
 
 # enable the warning class
 SCons.Warnings.enableWarningClass(SymLinkWarning)

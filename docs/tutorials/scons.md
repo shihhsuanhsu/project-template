@@ -30,7 +30,7 @@ Running `matlab` from the terminal should launch the Matlab GUI.
 
 SCons allows us to construct environments (setting environment variables, etc.),
     and within an environment, there are builders that handle code execution.
-We have coded builders for Python, Julia, Stata, Matlab and symbolic links.
+We have coded builders for `Python`, `Julia`, `Stata`, `Matlab`, `Dynare`, `PDF`, and symbolic links.
 Builders, as the name implies, execute the code.
 
 In the `tasks` directory, there is a [`SConstruct`](../../tasks/SConstruct) file
@@ -65,20 +65,27 @@ Otherwise, all paths are relative to the `SConscript`.
 **NOTE:** When writing code, please also use relative paths
     and assume code is executed in the directory containing it.
 
-#### Custom builders
+#### Scripting Builders (`Python`, `Julia`, `Stata`, `Matlab`, `Dynare`)
 
-For `Python`, `Julia`, `Stata`, and `Matlab` builders,
+For `Python`, `Julia`, `Stata`, `Matlab`, and `Dynare` builders,
     only the **first** source will be executed,
     but passing additional sources specifies the additional dependencies for the target(s).
 For example, the code might use a dataset, which should be included in the source argument.
 To specify arguments when running a script (Python, Julia, or Stata),
     use the `ARGS` parameter in the builder.
+
+**NOTE**: Matlab and Dynare scripts do not take CLI arguments.
+    Instead, the arguments are passed as an environment variable named `ARGS`.
+    You can access them in Matlab using `getenv('ARGS')`.
+
 All the print statements and error messages in the scripts are redirected to
     a log file with the same filename as the first source file (unless otherwise specified)
     but with a `.log` extension,
     at a `logs` directory by default.
 To store the log file with a different name or path,
     set the `LOG_FILE` parameter when calling the builder.
+You can also change the default log directory (from `logs`) by setting `LOG_DIR` in the environment or builder.
+
 For example, the code below stores the log file to a different path:
 
 ```python
@@ -112,12 +119,64 @@ for i in range(10):
     )
 ```
 
+To directly mark a build as successful (e.g., to skip execution during debugging),
+    pass `SUCCESS=True` to any of these builders.
+
+#### PDF Builder
+
+The `PDF` builder compiles a LaTeX file into a PDF.
+It uses `latexmk` by default, but you can change the compiler by setting `PDF_COMPILER` in the environment.
+Logs and auxiliary files are automatically tracked as targets.
+
+```python
+env.PDF(
+    target=["output/paper.pdf"],
+    source=["code/paper.tex"]
+)
+```
+
+#### Linking and Copying (`Link`, `Links`, `LinkNow`, `Copy`)
+
 The `Link` builder creates a symbolic link between the source and the target.
 This builder is essential when using output or code from another task.
 If SCons does not have permission to create a symbolic link, it will copy the file.
 If you want to copy the file rather than creating a symbolic link,
     set the parameter `COPY` to `True` when using the `Link` builder.
 The `Links` builder is provided for linking multiple files.
+
+The `LinkNow` method immediately creates a symbolic link or copies the file
+    during the SConscript reading phase, rather than waiting for the build phase.
+It also supports a `SUBS` parameter (dictionary) to perform text substitutions
+    if `COPY=True`.
+
+```python
+# Create a link immediately with substitutions
+env.LinkNow(
+    target="output/config.py",
+    source="code/config_template.py",
+    COPY=True,
+    SUBS={"REPLACE_ME": "actual_value"}
+)
+```
+
+The `Copy` builder is a shorthand for `Link` with `COPY=True`.
+
+#### Downloading Data (`Download`, `Downloads`)
+
+The `Download` and `Downloads` methods allow you to download files from a URL.
+They are wrappers around the `Python` builder and use a common download script.
+
+```python
+env.Download(
+    target="output/data.csv",
+    source="https://example.com/data.csv"
+)
+
+env.Downloads(
+    target=["output/data1.csv", "output/data2.csv"],
+    source=["https://example.com/data1.csv", "https://example.com/data2.csv"]
+)
+```
 
 If you'd like to track the MD5 of all the targets in the output directory,  
     supply `STORE_MD5 = True` to the builder (does not work with `Link` and `Links`).

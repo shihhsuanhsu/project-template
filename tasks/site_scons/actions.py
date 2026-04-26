@@ -99,7 +99,7 @@ def copy_build_action(target, source, env, no_copy_warning=False, *_, **__):
     )
 
 
-def stata_build_action(source, env, *_, **__):
+def stata_build_action(target, source, env, *_, **__):
     """
     This function is used to execute the first Stata file in the source.
     Any print statements in the source files will be redirected to a log file
@@ -132,10 +132,15 @@ def stata_build_action(source, env, *_, **__):
         log = log_file.read()
         if "ERROR RUNNING DO FILE:" in log:
             return 1
+    # check MD5 hash if STORE_MD5 is True
+    if env.get("STORE_MD5", False):
+        md5_status = store_md5_action(target=target, source=source, env=env)
+        if md5_status != 0:
+            return md5_status
     return runner.returncode
 
 
-def generic_build_action(source, env, program, ext, *_, **__):
+def generic_build_action(target, source, env, program, ext, *_, **__):
     """
     This function is used to execute the first `program` file in the source.
     Any print statements in the source files will be redirected to a log file
@@ -156,6 +161,11 @@ def generic_build_action(source, env, program, ext, *_, **__):
             stderr=log_file,
             check=True,
         )
+    # check MD5 hash if STORE_MD5 is True
+    if env.get("STORE_MD5", False):
+        md5_status = store_md5_action(target=target, source=source, env=env)
+        if md5_status != 0:
+            return md5_status
     return runner.returncode
 
 
@@ -232,6 +242,11 @@ def matlab_build_action(target, source, env, dynare=False):
             check=True,
             env=env_vars,
         )
+    # check MD5 hash if STORE_MD5 is True
+    if env.get("STORE_MD5", False):
+        md5_status = store_md5_action(target=target, source=source, env=env)
+        if md5_status != 0:
+            return md5_status
     return runner.returncode
 
 
@@ -330,14 +345,13 @@ def store_md5_action(target, source, env):
     This function is used to store the MD5 hash of the target files
     in a JSON file.
     """
-    if env.get("STORE_MD5", False):
-        for target_file in target:
-            target_file = str(target_file)
-            if "output" in target_file:
-                md5_file_path = create_md5_file_path(env, target_file)
-                # calculate the MD5 hash of the source file
-                md5_hash = calculate_md5(target_file)
-                # write the MD5 hash to the file
-                with open(md5_file_path, "w") as f:
-                    json.dump(md5_hash, f, indent=4)
+    for target_file in target:
+        target_file = str(target_file)
+        if "output" in target_file:
+            md5_file_path = create_md5_file_path(env, target_file)
+            # calculate the MD5 hash of the source file
+            md5_hash = calculate_md5(target_file)
+            # write the MD5 hash to the file
+            with open(md5_file_path, "w") as f:
+                json.dump(md5_hash, f, indent=4)
     return 0

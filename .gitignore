@@ -29,3 +29,4 @@ tasks/common/code/stata_config.py
 **.sconsign.dblite
 **/+*
 **/.SConscript
+GEMINI.md
