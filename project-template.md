@@ -1,11 +1,16 @@
 # Project Template
 
-Version: 0.2.18
+Version: 0.2.19
 
 **NOTE:** Please do not modify this file.
 Shih-Hsuan uses this file to track the project template version.
 
 ## Update log
+
+### 0.2.19
+
+- Fix a bug related to using `SUCCESS = True` to skip a build (targets were deleted)
+- Update task graph code making it faster
 
 ### 0.2.18
 
@@ -19,7 +24,7 @@ Shih-Hsuan uses this file to track the project template version.
 ### 0.2.16
 
 - Add a new feature to skip a build and directly mark it as successful
-  - To skip a build, simply set the `SUCCESS` variable in the environment to `True` in the SCons script.
+  - To skip a build, simply set the `SUCCESS` variable in the environment to `True` in the SCons script
   - Only works with the Python, Julia, Stata, and Matlab actions for now
 - Update to Python 3.14
 - Update packages version in the conda environment file

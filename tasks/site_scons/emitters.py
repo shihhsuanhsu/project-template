@@ -6,7 +6,6 @@ This file contains all the emitters that can be used
 """
 
 import os
-import json
 from helpers import create_log_file_path, create_md5_file_path
 from actions import check_pdf_compiler_action
 
@@ -16,7 +15,12 @@ def add_log_to_target(target, source, env, ext):
     This function adds the log file as a target.
     """
     log_file = create_log_file_path(env, source, ext)
-    return target + [log_file], source
+    target += [log_file]
+    if env.get("SUCCESS", False):
+        # SUCCESS = True means build is marked as successful WITHOUT running the actual command,
+        # so we want to prevent output files from being deleted.
+        env.Precious(target)
+    return target, source
 
 
 def python_emitter(target, source, env):
@@ -82,6 +86,10 @@ def md5_emitter(target, source, env):
                 md5_file_path = create_md5_file_path(env, target_file)
                 md5_files.append(md5_file_path)
         target += md5_files
+    if env.get("SUCCESS", False):
+        # SUCCESS = True means build is marked as successful WITHOUT running the actual command,
+        # so we want to prevent output files from being deleted.
+        env.Precious(target)
     return target, source
 
 

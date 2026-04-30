@@ -53,4 +53,4 @@ if platform.uname().node == "OVRW-ECON-P04":
 SConscript(sconscript_files, exports="env")
 
 # create the task graph after all SConscript files are processed
-# create_task_graph(env)
+create_task_graph(env)

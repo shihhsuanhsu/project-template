@@ -107,7 +107,9 @@ def stata_build_action(target, source, env, *_, **__):
     """
     # directly mark a build as successful (helpful when skipping a build)
     if env.get("SUCCESS", False):
-        no_build_warning(f"Stata action to execute {source[0]} skipped.")
+        no_build_warning(
+            f"Stata action to execute {source[0]} skipped; targets: {[str(t) for t in target]}."
+        )
         return 0
     # get directory and filename
     dir_name, filename = os.path.split(str(source[0]))
@@ -148,7 +150,9 @@ def generic_build_action(target, source, env, program, ext, *_, **__):
     """
     # directly mark a build as successful (helpful when skipping a build)
     if env.get("SUCCESS", False):
-        no_build_warning(f"{program.title()} action for {source[0]} skipped.")
+        no_build_warning(
+            f"{program.title()} action for {source[0]} skipped; targets: {[str(t) for t in target]}."
+        )
         return 0
     # get directory and filename
     dir_name, filename = os.path.split(str(source[0]))
@@ -214,7 +218,9 @@ def matlab_build_action(target, source, env, dynare=False):
     """
     # directly mark a build as successful (helpful when skipping a build)
     if env.get("SUCCESS", False):
-        no_build_warning(f"Matlab action for {source[0]} skipped.")
+        no_build_warning(
+            f"Matlab action for {source[0]} skipped; targets: {[str(t) for t in target]}."
+        )
         return 0
     # parse arguments as environmental variables,
     # because matlab scripts do not take arguments

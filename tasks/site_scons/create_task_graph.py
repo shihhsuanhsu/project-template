@@ -1,4 +1,6 @@
 """
+Shih-Hsuan Hsu
+April 26, 2026
 Functions for creating a task graph using Graphviz.
 """
 
@@ -8,7 +10,6 @@ def create_task_graph(env):
     Create a task graph using Graphviz.
     Assume working directory is the project tasks directory.
     """
-    from SCons.Util import render_tree
     import graphviz
 
     # get the root node
@@ -17,18 +18,29 @@ def create_task_graph(env):
     DEPS = {}
     """Store the children of each node"""
 
-    def get_children(node):
-        """
-        Get the children of the node.
-        """
+    # 1. Use a stack and a visited set for efficient DAG traversal
+    visited = set()
+    stack = [root_node]
+
+    while stack:
+        node = stack.pop()
+        node_str = str(node)
+
+        # Skip if we have already evaluated this node's children
+        if node_str in visited:
+            continue
+        visited.add(node_str)
+
         children = node.children()
+
         if children and node is not root_node:
             # stores the children of the node
-            DEPS[str(node)] = set(map(str, children))
-        return children
+            DEPS[node_str] = set(map(str, children))
 
-    # render the tree (stores the dependencies in `DEPS`)
-    render_tree(root=root_node, child_func=get_children)
+        # Add unvisited children to the stack to be processed
+        for child in children:
+            if str(child) not in visited:
+                stack.append(child)
 
     # maintain only the task level dependencies
     task_deps = {}
@@ -37,6 +49,8 @@ def create_task_graph(env):
         if node == ".":
             continue
         # get origin task name
+        if isinstance(node, list):
+            raise ValueError(f"Unexpected node name: {node}")
         task_name = node.split("/")[0]
         if task_name not in task_deps:
             task_deps[task_name] = set()
